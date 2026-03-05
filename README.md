@@ -26,20 +26,18 @@ There are six projects in total. There is a [gitbook](https://cs186.gitbook.io/p
 
 - Project 1: SQL 
   - You will learn to write SQL queries in this project.
-  - My implementation is in this [repo](https://github.com/PKUFlyingPig/CS186-proj1).
+  - My implementation is in this [repo](https://github.com/Gerard-Devlin/CS186/tree/main/project-handout/proj1/proj1-source-code).
 - Project 2 - 4 : Implement a simple relational database —— rookiedb
-  - My implementation is in this [repo](https://github.com/PKUFlyingPig/CS186-Rookiedb).
+  - My implementation is in this [repo](https://github.com/Gerard-Devlin/CS186/tree/main/project-handout/sp26-rookiedb).
   - project 2: B+ tree
   - project 3: joins and query optimization
   - project 4: concurrency
   - project 5: recovery
 - Project 6: NoSQL
   - You will learn to write mongodb queries in this project.
-  - My implementation is in this [repo](https://github.com/PKUFlyingPig/CS186-proj6).
+  - My implementation is in this [repo]().
 
-## Want to learn more ?
 
-Check out [this repository](https://github.com/PKUFlyingPig/Self-learning-Computer-Science) which contains all my self-learning materials : )
 
 
 
