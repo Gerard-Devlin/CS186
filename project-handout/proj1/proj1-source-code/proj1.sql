@@ -218,39 +218,112 @@ HAVING
 -- Question 4i
 CREATE VIEW q4i(yearid, min, max, avg) AS
 SELECT
-;
+  S.yearid,
+  MIN(salary),
+  MAX(salary),
+  AVG(salary)
+FROM
+  salaries S
+GROUP BY
+  S.yearid
+ORDER BY
+  S.yearid ASC;
 
 -- Question 4ii
-CREATE VIEW q4ii(binid, low, high, count) AS
+CREATE VIEW q4ii(binid, low, high, count) AS WITH bounds AS (
+  SELECT
+    MIN(salary) AS minsal,
+    MAX(salary) AS maxsal,
+    (MAX(salary) - MIN(salary)) / 10.0 AS width
+  FROM
+    salaries
+  WHERE
+    yearid = 2016
+),
+bins AS (
+  SELECT
+    CASE
+      WHEN CAST((s.salary - b.minsal) / b.width AS INT) >= 9 THEN 9
+      ELSE CAST((s.salary - b.minsal) / b.width AS INT)
+    END AS binid
+  FROM
+    salaries s
+    CROSS JOIN bounds b
+  WHERE
+    s.yearid = 2016
+),
+counts AS (
+  SELECT
+    binid,
+    COUNT(*) AS cnt
+  FROM
+    bins
+  GROUP BY
+    binid
+)
 SELECT
-  1,
-  1,
-  1,
-  1 -- replace this line
+  bi.binid,
+  b.minsal + bi.binid * b.width AS low,
+  CASE
+    WHEN bi.binid = 9 THEN b.maxsal
+    ELSE b.minsal + (bi.binid + 1) * b.width
+  END AS high,
+  COALESCE(c.cnt, 0) AS count
+FROM
+  binids bi
+  CROSS JOIN bounds b
+  LEFT JOIN counts c ON bi.binid = c.binid
+ORDER BY
+  bi.binid;
+
 ;
 
 -- Question 4iii
 CREATE VIEW q4iii(yearid, mindiff, maxdiff, avgdiff) AS
 SELECT
-  1,
-  1,
-  1,
-  1 -- replace this line
-;
+  I.yearid,
+  I.min - II.min,
+  I.max - II.max,
+  I.avg - II.avg
+FROM
+  q4i I
+  JOIN q4i II ON I.yearid = II.yearid + 1
+GROUP BY
+  I.yearid;
 
 -- Question 4iv
 CREATE VIEW q4iv(playerid, namefirst, namelast, salary, yearid) AS
 SELECT
-  1,
-  1,
-  1,
-  1,
-  1 -- replace this line
-;
+  P.playerid,
+  P.namefirst,
+  P.namelast,
+  salary,
+  yearid
+FROM
+  salaries S
+  JOIN People P ON S.playerid = P.playerid
+WHERE
+  S.yearid IN(2000, 2001)
+  AND S.salary =(
+    SELECT
+      MAX(salary)
+    FROM
+      salaries
+    WHERE
+      S.yearid = yearid
+  );
 
 -- Question 4v
 CREATE VIEW q4v(team, diffAvg) AS
 SELECT
-  1,
-  1 -- replace this line
-;
+  ASF.teamid,
+  MAX(S.salary) - MIN(S.salary)
+FROM
+  allstarfull ASF
+  JOIN salaries S ON ASF.playerid = S.playerid
+  AND ASF.teamid = S.teamid
+  AND ASF.yearid = S.yearid -- must be same team same year same person bcs one person might transfer to different teams in different years
+WHERE
+  S.yearid = 2016
+GROUP BY
+  ASF.teamid;
